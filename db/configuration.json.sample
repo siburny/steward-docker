@@ -37,5 +37,6 @@
   "serialPorts": {
   },
   "forecastio": {"key": "<KEY GOES HERE>"},
-  "location": [LAT, LONG]
+  "location": [LAT, LONG],
+  "ipAddressToScan": ["<IP ADDRESS HERE>"]
 }
