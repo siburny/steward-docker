@@ -11,7 +11,7 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 [System.IO.Compression.ZipFile]::ExtractToDirectory("master.zip", ".\")
 
 # Build image
-docker build -t siburny/steward-docker .
+docker build -t siburny/steward .
 
 # Clear stale artifacts
 try { rm -force -r steward-master -erroraction stop } Catch { }

@@ -1,1 +1,1 @@
-docker run -d -v c:\Projects\nodejs\steward-docker\db:/usr/src/app/db -p 8887:8887 -p 8888:8888 --name steward-dev siburny/steward-docker
+docker run -d -v c:\Projects\nodejs\steward-docker\db:/usr/src/app/db -p 8887:8887 -p 8888:8888 --name steward siburny/steward
