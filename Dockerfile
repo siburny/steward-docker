@@ -1,50 +1,6 @@
-FROM resin/rpi-raspbian:jessie
+FROM resin/raspberry-pi2-debian
 
-# Install common build dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    curl \
-    wget \
-    bzr \
-    git \
-    mercurial \
-    openssh-client \
-    subversion \
-    procps \
-    autoconf \
-    automake \
-    bzip2 \
-    file \
-    g++ \
-    gcc \
-    imagemagick \
-    libbz2-dev \
-    libc6-dev \
-    libcurl4-openssl-dev \
-    libevent-dev \
-    libffi-dev \
-    libgeoip-dev \
-    libglib2.0-dev \
-    libjpeg-dev \
-    liblzma-dev \
-    libmagickcore-dev \
-    libmagickwand-dev \
-    libmysqlclient-dev \
-    libncurses-dev \
-    libpng-dev \
-    libpq-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    libssl-dev \
-    libtool \
-    libwebp-dev \
-    libxml2-dev \
-    libxslt-dev \
-    libyaml-dev \
-    make \
-    patch \
-    xz-utils \
-    zlib1g-dev \
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential git python \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean
 
@@ -64,26 +20,29 @@ RUN set -ex \
     gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
   done
 
+# Install NodeJS
 ENV NPM_CONFIG_LOGLEVEL info
 ENV NODE_VERSION 6.11.0
-
-RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-armv6l.tar.gz" \
+ARG ARMPLATFORM=armv7l
+RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARMPLATFORM.tar.gz" \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
   && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-  && grep " node-v$NODE_VERSION-linux-armv6l.tar.gz\$" SHASUMS256.txt | sha256sum -c - \
-  && tar -xzf "node-v$NODE_VERSION-linux-armv6l.tar.gz" -C /usr/local --strip-components=1 \
-  && rm "node-v$NODE_VERSION-linux-armv6l.tar.gz" SHASUMS256.txt SHASUMS256.txt.asc
+  && grep " node-v$NODE_VERSION-linux-$ARMPLATFORM.tar.gz\$" SHASUMS256.txt | sha256sum -c - \
+  && tar -xzf "node-v$NODE_VERSION-linux-$ARMPLATFORM.tar.gz" -C /usr/local --strip-components=1 \
+  && rm "node-v$NODE_VERSION-linux-$ARMPLATFORM.tar.gz" SHASUMS256.txt SHASUMS256.txt.asc
+
+
 
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY ./steward/steward/package.json /usr/src/app
+COPY ./steward-master/steward/package.json /usr/src/app
 RUN npm install
 
 # Copy sources
-COPY ./steward/steward/ /usr/src/app
+COPY ./steward-master/steward/ /usr/src/app
 
 EXPOSE 8887 8888
 CMD [ "node", "index.js" ]

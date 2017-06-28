@@ -1,0 +1,41 @@
+{
+  "logconfigs": {
+    "climate": {
+      "console": {
+        "level": "info"
+      }
+    },
+    "media": {
+      "console": {
+        "level": "info"
+      }
+    },
+    "motive": {
+      "console": {
+        "level": "info"
+      }
+    },
+    "wearable": {
+      "console": {
+        "level": "info"
+      }
+    },
+    "server": {
+      "console": {
+        "level": "error"
+      }
+    }
+  },
+  "deviceTypes": {
+    "include": {},
+    "exclude": {}
+  },
+  "discovery": {
+    "include": [],
+    "exclude": []
+  },
+  "serialPorts": {
+  },
+  "forecastio": {"key": "<KEY GOES HERE>"},
+  "location": [LAT, LONG]
+}

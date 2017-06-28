@@ -1,1 +1,6 @@
+#build artifact
 /steward
+
+#ignore local config except the sample
+/db/*
+!/db/*.sample
