@@ -1,5 +1,6 @@
 #build artifact
-/steward
+/steward-master
+master\.zip
 
 #ignore local config except the sample
 /db/*
