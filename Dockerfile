@@ -1,5 +1,10 @@
 FROM resin/raspberry-pi2-debian
 
+# Set timezone  
+ENV TZ=America/New_York
+RUN echo America/New_York | tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
+
+# Update and install essentials
 RUN apt-get update && apt-get install -y --no-install-recommends build-essential git python \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean
@@ -22,7 +27,7 @@ RUN set -ex \
 
 # Install NodeJS
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 6.11.0
+ENV NODE_VERSION 6.11.5
 ARG ARMPLATFORM=armv7l
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARMPLATFORM.tar.gz" \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
@@ -30,8 +35,6 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
   && grep " node-v$NODE_VERSION-linux-$ARMPLATFORM.tar.gz\$" SHASUMS256.txt | sha256sum -c - \
   && tar -xzf "node-v$NODE_VERSION-linux-$ARMPLATFORM.tar.gz" -C /usr/local --strip-components=1 \
   && rm "node-v$NODE_VERSION-linux-$ARMPLATFORM.tar.gz" SHASUMS256.txt SHASUMS256.txt.asc
-
-
 
 # Create app directory
 RUN mkdir -p /usr/src/app
@@ -45,4 +48,4 @@ RUN npm install
 COPY ./steward-master/steward/ /usr/src/app
 
 EXPOSE 8887 8888
-CMD [ "node", "index.js" ]
+CMD ["/bin/bash", "-c", "node index.js 2>&1 | tee /usr/src/app/db/steward.log"]
