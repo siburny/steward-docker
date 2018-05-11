@@ -1,3 +1,6 @@
+#set default TLS1.2
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+
 # Clear stale artifacts
 try { rm -force -r steward-master -erroraction stop } Catch { }
 try { rm master.zip -erroraction stop } Catch { }
