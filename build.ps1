@@ -16,6 +16,9 @@ Add-Type -AssemblyName System.IO.Compression.FileSystem
 # Build image
 docker build -t siburny/steward docker/.
 
+#Push
+docker push siburny/steward
+
 # Clear stale artifacts
 try { rm -force -r docker/steward-master -erroraction stop } Catch { }
 try { rm master.zip -erroraction stop } Catch { }

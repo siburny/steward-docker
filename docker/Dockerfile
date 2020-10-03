@@ -1,9 +1,5 @@
 FROM arm32v7/node:12 as build
 
-# Set timezone  
-ENV TZ=America/New_York
-RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
-
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
@@ -13,7 +9,15 @@ COPY ./steward-master/steward/package.json /usr/src/app
 COPY ./steward-master/steward/package-lock.json /usr/src/app
 RUN npm install
 
+# Pack
 FROM arm32v7/node:12-slim
+
+# Set timezone  
+ENV TZ=America/New_York
+RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && dpkg-reconfigure --frontend noninteractive tzdata
+
+# Install missing UDEV
+RUN apt-get update && apt-get install -y --no-install-recommends udev && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /usr/src/app/node_modules /usr/src/app/node_modules
 
